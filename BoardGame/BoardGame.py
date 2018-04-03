@@ -62,11 +62,11 @@ def parser(tokens):
             # Tester om argumenterne er af længden 2. F.eks. 'h2'. Ellers er det ikke lovligt
             if (len(argFrom) == 2 and len(argTo) == 2):
                 # move(argFrom, argTo)      kalder en funktion der ikke er oprettet endnu
-                print("moves " + argFrom + " to " + argTo) # TEST PRINT
+                print("succesfully moved " + argFrom + " to " + argTo) # TEST PRINT
             else:
                 print("Not a valid operation. Use coordinates from and to.") # error message
         else:
-           print("KEYWORD '" + tokens[i] + "' iS NOT ACCEPTED") # TEST PRINT
+           print("KEYWORD '" + tokens[i] + "' IS NOT ACCEPTED") # TEST PRINT
 
 # 'main' funktion som kører lexeren, så parseren. Virker generelt som interpreter.
 def main(tekst):
