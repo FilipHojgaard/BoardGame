@@ -1,11 +1,18 @@
 import numpy as np
 
+# Dictionary der definere positioner for bogstaver. Starter ved 1 fordi plads 0 bliver brugt af pladens tal visere.
+position = {"a" : 1, "b" : 2, "c" : 3, "d" : 4, "e" : 5, "f" : 6, "g" : 7, "h" : 8, "i" : 9, "j" : 10, "k" : 11, "l" : 12, "m" : 13, "n" : 14};
+print(position);
+
+global board;
+
 # Funktion som opsætter spillebrættet med de ønskede dimensioner, og sætter bogstaver øverst og tal på siden.
 def boardSetup(boardRows, boardColumns):
     # boardRows = int(input("Rows of the board: "))+1
     # boardColumns = int(input("Columns of the board: "))+1
     boardRows += 1
     boardColumns += 1
+    global board
     board = [[0 for x in range(boardColumns)] for y in range(boardRows)]
     letters = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N',]
 
@@ -65,9 +72,20 @@ def parser(tokens):
                 print("succesfully moved " + argFrom + " to " + argTo) # TEST PRINT
             else:
                 print("Not a valid operation. Use coordinates from and to.") # error message
+        elif tokens[i] == "put":
+            print("keyword 'put' accepted")
+            putBrik(tokens[i+1])
         else:
            print("KEYWORD '" + tokens[i] + "' IS NOT ACCEPTED") # TEST PRINT
 
+# Putter en brik på koordinatet. Bruger dictionary 'position' til at oversætte f.eks. d3 til [3][3]
+def putBrik(coordinat):
+    row = position[coordinat[0]]
+    col = int(coordinat[1])
+    global board
+    board[row][col] = "T"
+    print(np.matrix(board))
+    
 # 'main' funktion som kører lexeren, så parseren. Virker generelt som interpreter.
 def main(tekst):
     tekstTokens = lexer(tekst)
