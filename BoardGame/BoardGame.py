@@ -80,8 +80,8 @@ def parser(tokens):
 
 # Putter en brik på koordinatet. Bruger dictionary 'position' til at oversætte f.eks. d3 til [3][3]
 def putBrik(coordinat):
-    row = position[coordinat[0]]
-    col = int(coordinat[1])
+    col = position[coordinat[0]]
+    row = int(coordinat[1])
     global board
     board[row][col] = "T"
     print(np.matrix(board))
@@ -91,6 +91,9 @@ def main(tekst):
     tekstTokens = lexer(tekst)
     print(tekstTokens) # TEST PRINT
     parser(tekstTokens)
+    orgTekst = input();
+    main(orgTekst);
+    
 
 orgTekst = input();
 main(orgTekst);
