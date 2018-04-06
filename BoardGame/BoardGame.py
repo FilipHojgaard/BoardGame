@@ -72,18 +72,19 @@ def parser(tokens):
                 print("succesfully moved " + argFrom + " to " + argTo) # TEST PRINT
             else:
                 print("Not a valid operation. Use coordinates from and to.") # error message
+        # put Z a1, putter et 'Z' på plads a1.
         elif tokens[i] == "put":
             print("keyword 'put' accepted")
-            putBrik(tokens[i+1])
+            putBrik(tokens[i+1], tokens[i+2])
         else:
            print("KEYWORD '" + tokens[i] + "' IS NOT ACCEPTED") # TEST PRINT
 
 # Putter en brik på koordinatet. Bruger dictionary 'position' til at oversætte f.eks. d3 til [3][3]
-def putBrik(coordinat):
+def putBrik(brik,coordinat):
     col = position[coordinat[0]]
     row = int(coordinat[1])
     global board
-    board[row][col] = "T"
+    board[row][col] = brik
     print(np.matrix(board))
     
 # 'main' funktion som kører lexeren, så parseren. Virker generelt som interpreter.
