@@ -1,10 +1,15 @@
 import numpy as np
 
+# Eksempel på kørsel:
+# new 3 3 tic put O b2
+# laver nyt bræt som er 3x3, bruger spilleregler for tic tac toe og forsøger at putte en bolle på b2.
+
 # Dictionary der definere positioner for bogstaver. Starter ved 1 fordi plads 0 bliver brugt af pladens tal visere.
 position = {"a" : 1, "b" : 2, "c" : 3, "d" : 4, "e" : 5, "f" : 6, "g" : 7, "h" : 8, "i" : 9, "j" : 10, "k" : 11, "l" : 12, "m" : 13, "n" : 14};
 print(position);
 
 global board;
+global game;
 
 # Funktion som opsætter spillebrættet med de ønskede dimensioner, og sætter bogstaver øverst og tal på siden.
 def boardSetup(boardRows, boardColumns):
@@ -51,6 +56,7 @@ def lexer(tekst):
 # Hvis der er et korrekt patternmatch kalder den den reele funktion. F.eks. 'new 5 7' og
 # 'move a1 b2'.
 def parser(tokens):
+    global game
     argRow = 0
     argCol = 0
     argFrom = ""
@@ -75,7 +81,13 @@ def parser(tokens):
         # put Z a1, putter et 'Z' på plads a1.
         elif tokens[i] == "put":
             print("keyword 'put' accepted")
-            putBrik(tokens[i+1], tokens[i+2])
+            if tokens[i+1] == "x" or tokens[i+1] == "o":
+                putBrik(tokens[i+1], tokens[i+2])
+            else:
+                print("Unvalid piece. Place either x or o.")
+        # Sætter gamemode til tic. Så disse regler gælder. 
+        elif tokens[i] == "tic":
+            game = "tic"
         else:
            print("KEYWORD '" + tokens[i] + "' IS NOT ACCEPTED") # TEST PRINT
 
@@ -84,8 +96,11 @@ def putBrik(brik,coordinat):
     col = position[coordinat[0]]
     row = int(coordinat[1])
     global board
-    board[row][col] = brik
-    print(np.matrix(board))
+    if (board[row][col] == 0):
+        board[row][col] = brik
+        print(np.matrix(board))
+    else:
+        print("Already a piece here!")
     
 # 'main' funktion som kører lexeren, så parseren. Virker generelt som interpreter.
 def main(tekst):
