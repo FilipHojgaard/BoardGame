@@ -18,7 +18,7 @@ def boardSetup(boardRows, boardColumns):
     boardRows += 1
     boardColumns += 1
     global board
-    board = [[0 for x in range(boardColumns)] for y in range(boardRows)]
+    board = [[" " for x in range(boardColumns)] for y in range(boardRows)]
     letters = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N',]
 
     # Sætter bogstaver øverst på brættet
@@ -88,6 +88,7 @@ def parser(tokens):
         # Sætter gamemode til tic. Så disse regler gælder. 
         elif tokens[i] == "tic":
             game = "tic"
+            print("Gamemode rules: tic tac toe")   # TEST PRINT?
         else:
            print("KEYWORD '" + tokens[i] + "' IS NOT ACCEPTED") # TEST PRINT
 
@@ -96,7 +97,7 @@ def putBrik(brik,coordinat):
     col = position[coordinat[0]]
     row = int(coordinat[1])
     global board
-    if (board[row][col] == 0):
+    if (board[row][col] == " "):
         board[row][col] = brik
         print(np.matrix(board))
     else:
