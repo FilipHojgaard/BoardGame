@@ -8,15 +8,19 @@ import numpy as np
 position = {"a" : 1, "b" : 2, "c" : 3, "d" : 4, "e" : 5, "f" : 6, "g" : 7, "h" : 8, "i" : 9, "j" : 10, "k" : 11, "l" : 12, "m" : 13, "n" : 14};
 print(position);
 
+global boardRows;
+global boardColumns;
 global board;
 global game;
-
+game = "";
 # Funktion som opsætter spillebrættet med de ønskede dimensioner, og sætter bogstaver øverst og tal på siden.
-def boardSetup(boardRows, boardColumns):
+def boardSetup(rows, columns):
     # boardRows = int(input("Rows of the board: "))+1
     # boardColumns = int(input("Columns of the board: "))+1
-    boardRows += 1
-    boardColumns += 1
+    global boardRows
+    global boardColumns
+    boardRows = rows + 1
+    boardColumns = columns + 1
     global board
     board = [[" " for x in range(boardColumns)] for y in range(boardRows)]
     letters = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N',]
@@ -83,6 +87,7 @@ def parser(tokens):
             print("keyword 'put' accepted")
             if tokens[i+1] == "x" or tokens[i+1] == "o":
                 putBrik(tokens[i+1], tokens[i+2])
+                score()
             else:
                 print("Unvalid piece. Place either x or o.")
         # Sætter gamemode til tic. Så disse regler gælder. 
@@ -102,7 +107,32 @@ def putBrik(brik,coordinat):
         print(np.matrix(board))
     else:
         print("Already a piece here!")
-    
+   
+def score():
+    global board;
+    global boardRows;
+    global boardColumns;
+    # Herunder score reglerne for tic tac toe
+    if (game == "tic"): 
+        for i in range(1, boardRows):
+            for j in range (1, boardColumns):
+                if (board[i][j] == " "):
+                    continue
+                if j < (boardColumns-1):    #Sørger for vi ikke får "list out of index" ved kollonerne.
+                    if (board[i][j-1] == board[i][j]) and (board[i][j] == board[i][j+1]):
+                        print("3 på stribe vandret")
+                if i < (boardRows-1):       #Sørger for at vi ikke får list out of index ved rækkerne.
+                    if (board[i-1][j] == board[i][j]) and (board[i][j] == board[i+1][j]):
+                        print("3 på strive lodret")
+                if i < (boardRows-1) and (j < boardColumns-1):
+                    if (board[i-1][j-1] == board[i][j]) and (board[i][j] == board[i+1][j+1]):
+                        print("3 på strive skråt nedad")
+                if i < (boardRows-1) and (j < boardColumns-1):
+                    if (board[i+1][j-1] == board[i][j]) and (board[i][j] == board[i-1][j+1]):
+                        print("3 på strive skråt opad")
+    else:
+        print("No gamemode chosen");
+
 # 'main' funktion som kører lexeren, så parseren. Virker generelt som interpreter.
 def main(tekst):
     tekstTokens = lexer(tekst)
