@@ -5,7 +5,8 @@ import numpy as np
 # laver nyt bræt som er 3x3, bruger spilleregler for tic tac toe og forsøger at putte en bolle på b2.
 
 # Dictionary der definere positioner for bogstaver. Starter ved 1 fordi plads 0 bliver brugt af pladens tal visere.
-position = {"a" : 1, "b" : 2, "c" : 3, "d" : 4, "e" : 5, "f" : 6, "g" : 7, "h" : 8, "i" : 9, "j" : 10, "k" : 11, "l" : 12, "m" : 13, "n" : 14};
+position = {"a" : 1, "b" : 2, "c" : 3, "d" : 4, "e" : 5, "f" : 6, "g" : 7, "h" : 8, "i" : 9, "j" : 10, "k" : 11, "l" : 12, "m" : 13, "n" : 14, "o" : 14, "p" : 14, "q" : 14,
+            "r" : 14, "s" : 14, "t" : 14, "u" : 14, "v" : 14, "w" : 14, "x" : 14, "y" : 14};
 print(position);
 
 global boardRows;
@@ -23,7 +24,7 @@ def boardSetup(rows, columns):
     boardColumns = columns + 1
     global board
     board = [[" " for x in range(boardColumns)] for y in range(boardRows)]
-    letters = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N',]
+    letters = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y',]
 
     # Sætter bogstaver øverst på brættet
     for i in range(1, boardColumns):
@@ -94,6 +95,9 @@ def parser(tokens):
         elif tokens[i] == "tic":
             game = "tic"
             print("Gamemode rules: tic tac toe")   # TEST PRINT?
+        elif tokens[i] == "five":
+            game = "five";
+            print("Gamemode rules: Gomuko/Five-In-a-Row")
         else:
            print("KEYWORD '" + tokens[i] + "' IS NOT ACCEPTED") # TEST PRINT
 
@@ -130,6 +134,23 @@ def score():
                 if i < (boardRows-1) and (j < boardColumns-1):
                     if (board[i+1][j-1] == board[i][j]) and (board[i][j] == board[i-1][j+1]):
                         print("3 på strive skråt opad")
+    elif (game == "five"):      # 5 på stribe
+        for i in range(1, boardRows):
+            for j in range (1, boardColumns):
+                if (board[i][j] == " "):
+                    continue
+                if j < (boardColumns-2):    #Sørger for vi ikke får "list out of index" ved kollonerne.
+                    if (board[i][j-2] == board[i][j]) and (board[i][j-1] == board[i][j]) and (board[i][j] == board[i][j+1]) and (board[i][j+2] == board[i][j]):
+                        print("5 på stribe vandret")
+                if i < (boardRows-2):       #Sørger for at vi ikke får list out of index ved rækkerne.
+                    if (board[i-2][j] == board[i][j]) and (board[i-1][j] == board[i][j]) and (board[i][j] == board[i+1][j]) and (board[i+2][j] == board[i][j]):
+                        print("5 på strive lodret")
+                if i < (boardRows-2) and (j < boardColumns-2):
+                    if (board[i-2][j-2] == board[i][j]) and (board[i-1][j-1] == board[i][j]) and (board[i][j] == board[i+1][j+1]) and (board[i][j] == board[i+2][j+2]):
+                        print("5 på strive skråt nedad")
+                if i < (boardRows-2) and (j < boardColumns-2):
+                    if (board[i+2][j-2] == board[i][j]) and (board[i+1][j-1] == board[i][j]) and (board[i][j] == board[i-1][j+1]) and (board[i][j] == board[i-2][j+2]):
+                        print("5 på strive skråt opad")
     else:
         print("No gamemode chosen");
 
