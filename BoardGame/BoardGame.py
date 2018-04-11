@@ -98,24 +98,43 @@ def parser(tokens):
         elif tokens[i] == "five":
             game = "five";
             print("Gamemode rules: Gomuko/Five-In-a-Row")
+        elif tokens[i] == "go":
+            game = "go";
+            print("Gamemode rules: Go")
+        elif tokens[i] == "mode":
+            print("Gamemode set to: " + game);
+        elif tokens[i] == "exit":
+            exit()
         else:
            print("KEYWORD '" + tokens[i] + "' IS NOT ACCEPTED") # TEST PRINT
 
 # Putter en brik på koordinatet. Bruger dictionary 'position' til at oversætte f.eks. d3 til [3][3]
 def putBrik(brik,coordinat):
+    global boardRows;
+    global boardColumns;
+    global board;
+    global game;
     col = position[coordinat[0]]
     row = int(coordinat[1])
-    global board
     if (board[row][col] == " "):
         board[row][col] = brik
-        print(np.matrix(board))
     else:
         print("Already a piece here!")
+    if (game == "go"):
+        for i in range(1, boardRows):
+            for j in range(1, boardColumns):
+                if (j < boardColumns-1) and (i < boardRows-1):
+                    if (board[i][j-1] == board[i][j+1]) and (board[i][j-1] == board[i-1][j]) and (board[i-1][j] == board[i+1][j]) and (board[i][j-1] != " "):
+                        print("fanget!") # TEST PRINT
+                        if board[i][j] != " " and (board[i][j] != board[i][j-1]):
+                            board[i][j] = board[i][j-1]
+    print(np.matrix(board))
    
 def score():
     global board;
     global boardRows;
     global boardColumns;
+    global game;
     # Herunder score reglerne for tic tac toe
     if (game == "tic"): 
         for i in range(1, boardRows):
@@ -151,6 +170,22 @@ def score():
                 if i < (boardRows-2) and (j < boardColumns-2):
                     if (board[i+2][j-2] == board[i][j]) and (board[i+1][j-1] == board[i][j]) and (board[i][j] == board[i-1][j+1]) and (board[i][j] == board[i-2][j+2]):
                         print("5 på strive skråt opad")
+    elif (game == "go"):
+        black = 0;
+        white = 0;
+        for i in range(1, boardRows):
+            for j in range(1, boardColumns):
+                if board[i][j] == "x":
+                    black += 1;
+                elif board[i][j] == "o":
+                    white += 1;
+        if (black > white):
+            print("black wins")
+        elif (white > black):
+            print("white wins")
+        else:
+            print("tie")
+        print("scoring not implemented for go yet")
     else:
         print("No gamemode chosen");
 
