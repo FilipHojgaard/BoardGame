@@ -7,7 +7,7 @@ import numpy as np
 # Dictionary der definere positioner for bogstaver. Starter ved 1 fordi plads 0 bliver brugt af pladens tal visere.
 position = {"a" : 1, "b" : 2, "c" : 3, "d" : 4, "e" : 5, "f" : 6, "g" : 7, "h" : 8, "i" : 9, "j" : 10, "k" : 11, "l" : 12, "m" : 13, "n" : 14, "o" : 14, "p" : 14, "q" : 14,
             "r" : 14, "s" : 14, "t" : 14, "u" : 14, "v" : 14, "w" : 14, "x" : 14, "y" : 14};
-print(position);
+# print(position);
 
 global boardRows;
 global boardColumns;
@@ -68,29 +68,29 @@ def parser(tokens):
     argTo = ""
     for i in range(len(tokens)):
         if tokens[i] == "new":
-            print("keyword 'new' accepted")
-            argRow = int(tokens[i+1])
-            argCol = int(tokens[i+2])
-            boardSetup(argRow, argCol)     # kalder funktionen 'boardSetup' som laver et bræt ud fra 2 argumenter. F.eks. 'new 5 7' laver 5x7 bræt.
-            print(argFrom+argTo)
-        elif tokens[i] == "move":
-            print("keyword 'move' accepted")
-            argFrom = tokens[i+1]
-            argTo = tokens[i+2]
-            # Tester om argumenterne er af længden 2. F.eks. 'h2'. Ellers er det ikke lovligt
-            if (len(argFrom) == 2 and len(argTo) == 2):
-                # move(argFrom, argTo)      kalder en funktion der ikke er oprettet endnu
-                print("succesfully moved " + argFrom + " to " + argTo) # TEST PRINT
+            if (tokens[i+1].isdigit()) and (tokens[i+2].isdigit()):
+                argRow = int(tokens[i+1])
+                argCol = int(tokens[i+2])
+                if argRow < 26 and argCol < 26 and argRow >= 0 and argCol >= 0:
+                    boardSetup(argRow, argCol)     # kalder funktionen 'boardSetup' som laver et bræt ud fra 2 argumenter. F.eks. 'new 5 7' laver 5x7 bræt.
+                    print() # springer en linje for læse venlighed
+                else:
+                    print("Error: new function expects integers between 0 and 25")
             else:
-                print("Not a valid operation. Use coordinates from and to.") # error message
+                print("Error: new function expects 2 integers as arguments")
         # put Z a1, putter et 'Z' på plads a1.
         elif tokens[i] == "put":
-            print("keyword 'put' accepted")
             if tokens[i+1] == "x" or tokens[i+1] == "o":
-                putBrik(tokens[i+1], tokens[i+2])
-                score()
+                if len(tokens[i+2]) == 2 and tokens[i+2][1].isdigit() and not(tokens[i+2][0].isdigit()):
+                    if tokens[i+1] == "x" or tokens[i+1] == "o":
+                        putBrik(tokens[i+1], tokens[i+2])
+                        score()
+                    else:
+                        print("Unvalid piece. Place either x or o.")
+                else:
+                    print("Error: put function expects coordinate set as second argument. E.g a1")
             else:
-                print("Unvalid piece. Place either x or o.")
+                print("Error: put function expects 'o' or 'x' as first argument")
         # Sætter gamemode til tic. Så disse regler gælder. 
         elif tokens[i] == "tic":
             game = "tic"
@@ -105,8 +105,8 @@ def parser(tokens):
             print("Gamemode set to: " + game);
         elif tokens[i] == "exit":
             exit()
-        else:
-           print("KEYWORD '" + tokens[i] + "' IS NOT ACCEPTED") # TEST PRINT
+        #else:
+         #  print("KEYWORD '" + tokens[i] + "' IS NOT ACCEPTED") # TEST PRINT
 
 # Putter en brik på koordinatet. Bruger dictionary 'position' til at oversætte f.eks. d3 til [3][3]
 def putBrik(brik,coordinat):
@@ -125,7 +125,6 @@ def putBrik(brik,coordinat):
             for j in range(1, boardColumns):
                 if (j < boardColumns-1) and (i < boardRows-1):
                     if (board[i][j-1] == board[i][j+1]) and (board[i][j-1] == board[i-1][j]) and (board[i-1][j] == board[i+1][j]) and (board[i][j-1] != " "):
-                        print("fanget!") # TEST PRINT
                         if board[i][j] != " " and (board[i][j] != board[i][j-1]):
                             board[i][j] = board[i][j-1]
     print(np.matrix(board))
@@ -143,16 +142,28 @@ def score():
                     continue
                 if j < (boardColumns-1):    #Sørger for vi ikke får "list out of index" ved kollonerne.
                     if (board[i][j-1] == board[i][j]) and (board[i][j] == board[i][j+1]):
-                        print("3 på stribe vandret")
+                        if board[i][j] == "o":
+                            print("0 2")
+                        else:
+                            print("2 0")
                 if i < (boardRows-1):       #Sørger for at vi ikke får list out of index ved rækkerne.
                     if (board[i-1][j] == board[i][j]) and (board[i][j] == board[i+1][j]):
-                        print("3 på strive lodret")
+                        if board[i][j] == "o":
+                            print("0 2")
+                        else:
+                            print("2 0")
                 if i < (boardRows-1) and (j < boardColumns-1):
                     if (board[i-1][j-1] == board[i][j]) and (board[i][j] == board[i+1][j+1]):
-                        print("3 på strive skråt nedad")
+                        if board[i][j] == "o":
+                            print("0 2")
+                        else:
+                            print("2 0")
                 if i < (boardRows-1) and (j < boardColumns-1):
                     if (board[i+1][j-1] == board[i][j]) and (board[i][j] == board[i-1][j+1]):
-                        print("3 på strive skråt opad")
+                        if board[i][j] == "o":
+                            print("0 2")
+                        else:
+                            print("2 0")
     elif (game == "five"):      # 5 på stribe
         for i in range(1, boardRows):
             for j in range (1, boardColumns):
@@ -160,16 +171,28 @@ def score():
                     continue
                 if j < (boardColumns-2):    #Sørger for vi ikke får "list out of index" ved kollonerne.
                     if (board[i][j-2] == board[i][j]) and (board[i][j-1] == board[i][j]) and (board[i][j] == board[i][j+1]) and (board[i][j+2] == board[i][j]):
-                        print("5 på stribe vandret")
+                        if board[i][j] == "o":
+                            print("0 2")
+                        else:
+                            print("2 0")
                 if i < (boardRows-2):       #Sørger for at vi ikke får list out of index ved rækkerne.
                     if (board[i-2][j] == board[i][j]) and (board[i-1][j] == board[i][j]) and (board[i][j] == board[i+1][j]) and (board[i+2][j] == board[i][j]):
-                        print("5 på strive lodret")
+                        if board[i][j] == "o":
+                            print("0 2")
+                        else:
+                            print("2 0")
                 if i < (boardRows-2) and (j < boardColumns-2):
                     if (board[i-2][j-2] == board[i][j]) and (board[i-1][j-1] == board[i][j]) and (board[i][j] == board[i+1][j+1]) and (board[i][j] == board[i+2][j+2]):
-                        print("5 på strive skråt nedad")
+                        if board[i][j] == "o":
+                            print("0 2")
+                        else:
+                            print("2 0")
                 if i < (boardRows-2) and (j < boardColumns-2):
                     if (board[i+2][j-2] == board[i][j]) and (board[i+1][j-1] == board[i][j]) and (board[i][j] == board[i-1][j+1]) and (board[i][j] == board[i-2][j+2]):
-                        print("5 på strive skråt opad")
+                        if board[i][j] == "o":
+                            print("0 2")
+                        else:
+                            print("2 0")
     elif (game == "go"):
         black = 0;
         white = 0;
@@ -180,23 +203,25 @@ def score():
                 elif board[i][j] == "o":
                     white += 1;
         if (black > white):
-            print("black wins")
+            print("2 0")
         elif (white > black):
-            print("white wins")
-        else:
-            print("tie")
-        print("scoring not implemented for go yet")
+            print("0 2")
+        elif (white == black):
+            print("0 0")
     else:
         print("No gamemode chosen");
 
 # 'main' funktion som kører lexeren, så parseren. Virker generelt som interpreter.
 def main(tekst):
     tekstTokens = lexer(tekst)
-    print(tekstTokens) # TEST PRINT
+ #   print(tekstTokens) # TEST PRINT
     parser(tekstTokens)
     orgTekst = input();
     main(orgTekst);
     
+def play(tekst):
+    tokens = lexer(tekst)
+    parser(tokens)
 
 orgTekst = input();
 main(orgTekst);
